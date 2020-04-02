@@ -272,8 +272,8 @@ const createFilmDetails = () => {
 };
 
 // ключевые узлы
-const headerElement = document.querySelector('.header');
-const mainElement = document.querySelector('.main');
+const headerElement = document.querySelector(`.header`);
+const mainElement = document.querySelector(`.main`);
 const footerElement = document.querySelector(`.footer`);
 
 // ф-я отрисовки

@@ -1,59 +1,61 @@
-const TOTAL_CARDS = 5;
-const TOTAL_CARDS_TOP = 2;
-const TOTAL_CARDS_COMMENT = 2;
+import API from "./api.js";
+import MoviesModel from "./models/movies.js";
+import Header from "./components/HeaderProfile.js";
+import {render, RenderPosition} from "./utils/render.js";
+import Filters from "./components/mainNavigation.js";
+import Sort from "./components/sort.js";
+import FilmsBox from "./components/filmsBox.js";
+import LoadMore from "./components/showMoreBtn.js";
+import ExtraList from "./components/filmsListExtra.js";
+import Movie from "./components/movie.js";
+import MovieEdit from "./components/movieEdit.js";
+
+const api = new API();
+const moviesModel = new MoviesModel();
 
 
-// шаблоны
-import {createHeaderProfile} from "./components/HeaderProfile.js";
-import {createMainNavigation} from "./components/MainNavigation.js";
-import {createSort} from "./components/Sort.js";
-import {createFilmsBox} from "./components/FilmsBox.js";
-import {createFilmCard} from "./components/FilmCard.js";
-import {createFilmsListExtra} from "./components/FilmsListExtra.js";
-import {createShowMoreBtn} from "./components/ShowMoreBtn.js";
-import {createFilmDetails} from "./components/FilmDetails.js";
+api.getMovies()
+  .then((movies) => {
+    moviesModel.setMovies(movies);
+    return movies;
+  });
+
+// console.log(moviesModel)
+
+const headerComponent = new Header();
+const filtersComponent = new Filters();
+const sortComponent = new Sort();
+const filmsBoxComponent = new FilmsBox();
+const movieEditComponent = new MovieEdit(moviesModel);
+const movieComponent = new Movie();
+const loadMoreComponent = new LoadMore();
+const extraListComponent = new ExtraList();
+
+// const TOTAL_CARDS = 5;
+// const TOTAL_CARDS_TOP = 2;
+// const TOTAL_CARDS_COMMENT = 2;
 
 // ключевые узлы
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
-const footerElement = document.querySelector(`.footer`);
-
-// ф-я отрисовки
-const render = (container, template, place = `beforeend`) => {
-  container.insertAdjacentHTML(place, template);
-};
-
-// отрисовки
-render(headerElement, createHeaderProfile());
-render(mainElement, createMainNavigation());
-render(mainElement, createSort());
-render(mainElement, createFilmsBox());
-render(footerElement, createFilmDetails(), `afterend`);
+// const footerElement = document.querySelector(`.footer`);
 
 
-// находит после отрисовки
+render(headerElement, headerComponent, RenderPosition.BEFOREEND);
+render(mainElement, filtersComponent, RenderPosition.BEFOREEND);
+render(mainElement, sortComponent, RenderPosition.BEFOREEND);
+render(mainElement, filmsBoxComponent, RenderPosition.BEFOREEND);
+render(mainElement, movieEditComponent, RenderPosition.BEFOREEND);
+
 const filmsElement = mainElement.querySelector(`.films`);
 const filmListContainer = filmsElement.querySelector(`.films-list__container`);
 
-// ф-я отрисовки необходимого кол-ва карточек фильма
-const renderCardsAmmount = (container, ammount = 2) => {
-  for (let i = 0; i < ammount; i++) {
-    render(container, createFilmCard());
-  }
-};
+render(filmListContainer, movieComponent, RenderPosition.BEFOREEND);
+render(filmListContainer, loadMoreComponent, RenderPosition.BEFOREEND);
 
-renderCardsAmmount(filmListContainer, TOTAL_CARDS);
-
-// отрисовка кнопки
-render(filmListContainer, createShowMoreBtn(), `afterend`);
-
-// отрисовка экстра-блока
-render(filmsElement, createFilmsListExtra());
+render(filmsElement, extraListComponent, RenderPosition.BEFOREEND);
 
 // находит после отрисовки
-const filmListExtraTop = filmsElement.querySelector(`.films-list--extra`).querySelector(`.films-list__container`);
-const filmListExtraComment = filmsElement.querySelector(`.films-list--extra:last-child`).querySelector(`.films-list__container`);
+// const filmListExtraTop = filmsElement.querySelector(`.films-list--extra`).querySelector(`.films-list__container`);
+// const filmListExtraComment = filmsElement.querySelector(`.films-list--extra:last-child`).querySelector(`.films-list__container`);
 
-// отрисовка карточек экстра-блока
-renderCardsAmmount(filmListExtraTop, TOTAL_CARDS_TOP);
-renderCardsAmmount(filmListExtraComment, TOTAL_CARDS_COMMENT);

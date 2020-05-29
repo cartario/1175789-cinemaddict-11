@@ -1,6 +1,7 @@
-export const createFilmCard = () => {
-  return (`
-  <article class="film-card">
+import AbstractComponent from "./abstract-component.js";
+
+export const createMovieTemplate = () => {
+  return `<article class="film-card">
     <h3 class="film-card__title">The Dance of Life</h3>
     <p class="film-card__rating">8.3</p>
     <p class="film-card__info">
@@ -16,6 +17,11 @@ export const createFilmCard = () => {
       <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>
       <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
     </form>
-  </article>
-  `);
+  </article>`;
 };
+
+export default class Movie extends AbstractComponent {
+  getTemplate() {
+    return createMovieTemplate();
+  }
+}

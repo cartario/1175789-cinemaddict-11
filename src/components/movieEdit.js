@@ -1,6 +1,7 @@
-export const createFilmDetails = () => {
-  return (`
-  <section class="film-details">
+import AbstractComponent from "./abstract-component.js";
+
+export const createMovieEditTemplate = () => {
+  return `<section class="film-details visually-hidden">
     <form class="film-details__inner" action="" method="get">
       <div class="form-details__top-container">
         <div class="film-details__close">
@@ -168,6 +169,17 @@ export const createFilmDetails = () => {
         </section>
       </div>
     </form>
-  </section>
-  `);
+  </section>`;
 };
+
+export default class MovieEdit extends AbstractComponent {
+  constructor(model) {
+    super();
+    this._moviesModel = model;
+  }
+
+  getTemplate() {
+
+    return createMovieEditTemplate();
+  }
+}

@@ -1,7 +1,7 @@
 import AbstractComponent from "./abstract-component.js";
 
 export const createMovieEditTemplate = () => {
-  return `<section class="film-details visually-hidden">
+  return `<section class="film-details ">
     <form class="film-details__inner" action="" method="get">
       <div class="form-details__top-container">
         <div class="film-details__close">
@@ -173,13 +173,12 @@ export const createMovieEditTemplate = () => {
 };
 
 export default class MovieEdit extends AbstractComponent {
-  constructor(model) {
-    super();
-    this._moviesModel = model;
-  }
 
   getTemplate() {
-
     return createMovieEditTemplate();
+  }
+
+  setPopupBtnClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
   }
 }

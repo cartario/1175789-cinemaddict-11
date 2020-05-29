@@ -22,6 +22,11 @@ export const createMovieTemplate = () => {
 
 export default class Movie extends AbstractComponent {
   getTemplate() {
+
     return createMovieTemplate();
+  }
+
+  setPosterBtnClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, handler);
   }
 }

@@ -4,4 +4,10 @@ export default class Api {
         {headers: new Headers({"Authorization": `Basic kTy9gIds237rD`})})
     .then((response) => response.json());
   }
+
+  getComments() {
+    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/comments/3`,
+        {headers: new Headers({"Authorization": `Basic kTy9Ids237rD`})})
+    .then((response) => response.json());
+  }
 }

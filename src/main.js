@@ -21,5 +21,10 @@ api.getMovies()
     return movies;
   });
 
+api.getComments()
+  .then((comments) => {
+    console.log(comments)
+  });
+
 const headerComponent = new Header();
 render(headerElement, headerComponent, RenderPosition.BEFOREEND);

@@ -1,6 +1,33 @@
 import AbstractComponent from "./abstract-component.js";
 
-export const createMovieEditTemplate = () => {
+export const createMovieEditTemplate = (movie) => {
+  const {comments, film_info, id, user_details} = movie; // TODO нужен адаптер (модель movie);
+  const filmInfo = film_info;
+
+  // filmInfo Структура:
+  // actors: (6) ["Takeshi Kitano", "Christian Bale", "Gary Oldman", "Harrison Ford", "Cillian Murphy", "Ralph Fiennes"]
+  // age_rating: 6
+  // alternative_title: "A Shark Who Saw Himself"
+  // description: "true masterpiece where love and death are closer to heroes than their family."
+  // director: "Clint Eastwood"
+  // genre: []
+  // poster: "images/posters/the-great-flamarion.jpg"
+  // release: {date: "2004-04-15T02:19:53.175Z", release_country: "USA"}
+  // runtime: 162
+  // title: "A Tale Of A Little Bird Who Sold Themselves"
+  // total_rating: 4
+  // writers: (3) ["Robert Zemeckis", "Robert Rodrigues", "Hayao Miazaki"]
+
+  // user_details Структура:
+  // already_watched: true
+  // favorite: false
+  // watching_date: "2020-02-24T13:34:21.386Z"
+  // watchlist: false
+
+  // comments: []
+
+  // id: "0"
+
   return `<section class="film-details ">
     <form class="film-details__inner" action="" method="get">
       <div class="form-details__top-container">
@@ -9,7 +36,7 @@ export const createMovieEditTemplate = () => {
         </div>
         <div class="film-details__info-wrap">
           <div class="film-details__poster">
-            <img class="film-details__poster-img" src="./images/posters/the-great-flamarion.jpg" alt="">
+            <img class="film-details__poster-img" src="./${filmInfo.poster}" alt="">
 
             <p class="film-details__age">18+</p>
           </div>
@@ -173,9 +200,14 @@ export const createMovieEditTemplate = () => {
 };
 
 export default class MovieEdit extends AbstractComponent {
+  constructor(movie) {
+    super();
+    this._movie = movie;
+  }
 
   getTemplate() {
-    return createMovieEditTemplate();
+
+    return createMovieEditTemplate(this._movie);
   }
 
   setPopupBtnClickHandler(handler) {

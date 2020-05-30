@@ -1,8 +1,23 @@
-import Movie from "../components/movie.js";
-import MovieEdit from "../components/movieEdit.js";
-import {render, replace, remove, RenderPosition} from "../utils/render.js";
-import LoadMore from "../components/showMoreBtn.js";
+import FilmController from "./film.js";
+import {render, remove, RenderPosition} from "../utils/render.js";
+import LoadMoreComponent from "../components/showMoreBtn.js";
 import NoMoviesComponent from "../components/no-movies.js";
+import FiltersComponent from "../components/mainNavigation.js";
+import SortComponent from "../components/sort.js";
+import FilmsBoxComponent from "../components/filmsBox.js";
+import TopRatedComponent from "../components/topRated.js";
+import MostCommentedComponent from "../components/mostCommented.js";
+
+const SHOWING_ON_START = 5;
+const SHOWIN_BY_BTN = 3;
+
+const renderFilms = (container, movies) => {
+  return movies.map((movie) => {
+    const filmController = new FilmController(container, movie);
+    filmController.render();
+    return filmController;
+  });
+};
 
 export default class Board {
   constructor(container, moviesModel, api) {
@@ -10,78 +25,54 @@ export default class Board {
     this._moviesModel = moviesModel;
     this._movies = [];
     this._api = api;
+    this._loadMoreComponent = new LoadMoreComponent();
     this._noMoviesComponent = new NoMoviesComponent();
-    this._movieComponent = null;
-    this._movieEditComponent = null;
-    this._onEscKeyDown = this._onEscKeyDown.bind(this);
+    this._filtersComponent = new FiltersComponent();
+    this._sortComponent = new SortComponent();
+    this._filmsBoxComponent = new FilmsBoxComponent();
+    this._topRatedComponent = new TopRatedComponent();
+    this._mostCommentedComponent = new MostCommentedComponent();
   }
 
-  renderFilms() {
-    const filmListContainer = this._container.querySelector(`.films-list__container`);// дубль
-    this._movies = this._moviesModel.getMovies();
+  render() {
+    render(this._container, this._filtersComponent, RenderPosition.BEFOREEND);
+    render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
+    render(this._container, this._filmsBoxComponent, RenderPosition.BEFOREEND);
 
+    const filmsElement = this._container.querySelector(`.films`);
+    const filmListContainer = this._container.querySelector(`.films-list__container`);
+
+    render(filmsElement, this._topRatedComponent, RenderPosition.BEFOREEND);
+    render(filmsElement, this._mostCommentedComponent, RenderPosition.BEFOREEND);
+
+    const topRatedElement = this._topRatedComponent.getElement().querySelector(`.films-list__container`);
+    const mostCommentedElement = this._mostCommentedComponent.getElement().querySelector(`.films-list__container`);
+
+    this._movies = this._moviesModel.getMovies();
     if (!this._movies) {
       render(filmListContainer, this._noMoviesComponent, RenderPosition.BEFOREEND);
       return;
     }
 
-    const SHOWING_ON_START = 5;
-    const SHOWIN_BY_BTN = 3;
-
     let showingMoviesCount = SHOWING_ON_START;
 
-    this._movies.slice(0, SHOWING_ON_START).forEach(() => {
-      this.render();
-    });
+    renderFilms(filmListContainer, this._movies.slice(0, SHOWING_ON_START));
 
-    const loadMoreComponent = new LoadMore();
-    loadMoreComponent.setLoadMoreBtnClickHandler(() => {
+
+    this._loadMoreComponent.setLoadMoreBtnClickHandler(() => {
       const prevMoviesCount = showingMoviesCount;
       showingMoviesCount = showingMoviesCount + SHOWIN_BY_BTN;
 
       if (showingMoviesCount >= this._movies.length) {
-        remove(loadMoreComponent);
+        remove(this._loadMoreComponent);
       }
-      this._movies.slice(prevMoviesCount, showingMoviesCount).forEach(() => {
-        this.render();
-      });
-    });
-    render(filmListContainer, loadMoreComponent, RenderPosition.BEFOREEND);
-  }
 
-  render() {
-
-    const filmListContainer = this._container.querySelector(`.films-list__container`);
-    this._movieEditComponent = new MovieEdit();
-    this._movieComponent = new Movie();
-
-
-    render(filmListContainer, this._movieComponent, RenderPosition.AFTERBEGIN);
-
-    this._movieComponent.setPosterBtnClickHandler(() => {
-      this._replaceMovieToEdit();
+      renderFilms(filmListContainer, this._movies.slice(prevMoviesCount, showingMoviesCount));
     });
 
-    this._movieEditComponent.setPopupBtnClickHandler(() => {
-      this._replaceEditToMovie();
-    });
-  }
+    render(filmListContainer, this._loadMoreComponent, RenderPosition.BEFOREEND);
 
-  _onEscKeyDown(evt) {
-    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
-    if (isEscKey) {
-      this._replaceEditToMovie();
-      document.removeEventListener(`keydown`, this._onEscKeyDown);
-    }
-  }
-
-  _replaceEditToMovie() {
-    replace(this._movieComponent, this._movieEditComponent);
-    document.addEventListener(`keydown`, this._onEscKeyDown);
-  }
-
-  _replaceMovieToEdit() {
-    replace(this._movieEditComponent, this._movieComponent);
-    document.addEventListener(`keydown`, this._onEscKeyDown);
+    renderFilms(topRatedElement, this._movies.slice(0, 2));
+    renderFilms(mostCommentedElement, this._movies.slice(2, 4));
   }
 }

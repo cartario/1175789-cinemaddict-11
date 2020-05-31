@@ -5,7 +5,7 @@ export const createMovieTemplate = (movie) => {
   const {comments, film_info, id, user_details} = movie; // TODO нужен адаптер (модель movie);
   const filmInfo = film_info;
 
-console.log(user_details.favorite)
+
   // filmInfo Структура:
   // actors: (6) ["Takeshi Kitano", "Christian Bale", "Gary Oldman", "Harrison Ford", "Cillian Murphy", "Ralph Fiennes"]
   // age_rating: 6

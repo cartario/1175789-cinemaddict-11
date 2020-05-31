@@ -1,9 +1,10 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {generateComment, generateComments} from "../utils/const.js";
 
-export const createMovieEditTemplate = (movie) => {
+export const createMovieEditTemplate = (movie, options = {}) => {
   const {comments, film_info, id, user_details} = movie; // TODO нужен адаптер (модель movie);
   const filmInfo = film_info;
+  const {isFavorite, isWatchlist, isAlreadyWatched, emoji} = options;
 
 
   // filmInfo Структура:
@@ -63,8 +64,10 @@ export const createMovieEditTemplate = (movie) => {
           </ul>
 
           <div class="film-details__new-comment">
-            <div for="add-emoji" class="film-details__add-emoji-label"></div>
+            <div for="add-emoji" class="film-details__add-emoji-label">
+            ${emoji ? `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">` : ``}
 
+            </div>
             <label class="film-details__comment-label">
               <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
             </label>
@@ -163,13 +166,13 @@ export const createMovieEditTemplate = (movie) => {
         </div>
 
         <section class="film-details__controls">
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${user_details.watchlist ? `checked` : ``}>
+          <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${isWatchlist ? `checked` : ``}>
           <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${user_details.already_watched ? `checked` : ``}>
+          <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${isAlreadyWatched ? `checked` : ``}>
           <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
 
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${user_details.favorite ? `checked` : ``}>
+          <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${isFavorite ? `checked` : ``}>
           <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
         </section>
       </div>
@@ -184,42 +187,65 @@ export default class MovieEdit extends AbstractSmartComponent {
   constructor(movie) {
     super();
     this._movie = movie;
+    this._emoji = null;
     this._isWatchlist = this._movie.user_details.watchlist;
     this._isAlreadyWatched = this._movie.user_details.already_watched;
     this._isFavorite = this._movie.user_details.favorite;
-
+    this._subscribeOnEvents();
   }
 
   getTemplate() {
-    console.log(this._isAlreadyWatched);
-    return createMovieEditTemplate(this._movie);
+
+    return createMovieEditTemplate(this._movie, {
+      isFavorite: this._isFavorite,
+      isWatchlist: this._isWatchlist,
+      isAlreadyWatched: this._isAlreadyWatched,
+      emoji: this._emoji,
+    });
   }
 
   setPopupBtnClickHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
   }
 
-  // setAddToWatchListClickHandler(handler) {
-  //   this.getElement().querySelector(`.film-details__control-label--watchlist`)
-  //     .addEventListener(`click`, handler)
-  // }
+  _subscribeOnEvents() {
+      const element = this.getElement();
 
-  // setMarkAsWatchedClickHandler(handler) {
-  //   this.getElement().querySelector(`.film-details__control-label--watched`)
-  //     .addEventListener(`click`, handler)
-  // }
+    element.querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`click`, () => {
+        this._isFavorite = !this._isFavorite;
+    this.rerender();
+      });
 
-  // setFavoriteClickHandler(handler) {
-  //   this.getElement().querySelector(`.film-details__control-label--favorite`)
-  //     .addEventListener(`click`, handler);
+    element.querySelector(`.film-details__control-label--watched`)
+    .addEventListener(`click`, () => {
+      this._isAlreadyWatched = !this._isAlreadyWatched;
+    this.rerender();
+    });
 
-  //     this.rerender()
-  // }
+    element.querySelector(`.film-details__control-label--watchlist`)
+    .addEventListener(`click`, () => {
+      this._isWatchlist = !this._isWatchlist;
+    this.rerender();
+    });
+
+    Array.from(element.querySelectorAll(`.film-details__emoji-item`)).forEach((emoji) => {
+      emoji.addEventListener(`click`, (evt) => {
+      this._emoji = evt.target.value;
+
+      this.rerender();
+        })
+
+
+    })
+
+  }
 
   rerender() {
     super.rerender();
   }
 
   recoveryListeners() {
+    this._subscribeOnEvents();
   }
 }

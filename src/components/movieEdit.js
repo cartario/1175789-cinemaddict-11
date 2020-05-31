@@ -1,4 +1,4 @@
-import AbstractComponent from "./abstract-component.js";
+import AbstractSmartComponent from "./abstract-smart-component.js";
 import {generateComment, generateComments} from "../utils/const.js";
 
 export const createMovieEditTemplate = (movie) => {
@@ -163,13 +163,13 @@ export const createMovieEditTemplate = (movie) => {
         </div>
 
         <section class="film-details__controls">
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+          <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${user_details.watchlist ? `checked` : ``}>
           <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
+          <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${user_details.already_watched ? `checked` : ``}>
           <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
 
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
+          <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${user_details.favorite ? `checked` : ``}>
           <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
         </section>
       </div>
@@ -180,18 +180,46 @@ export const createMovieEditTemplate = (movie) => {
   </section>`;
 };
 
-export default class MovieEdit extends AbstractComponent {
+export default class MovieEdit extends AbstractSmartComponent {
   constructor(movie) {
     super();
     this._movie = movie;
+    this._isWatchlist = this._movie.user_details.watchlist;
+    this._isAlreadyWatched = this._movie.user_details.already_watched;
+    this._isFavorite = this._movie.user_details.favorite;
+
   }
 
   getTemplate() {
-
+    console.log(this._isAlreadyWatched);
     return createMovieEditTemplate(this._movie);
   }
 
   setPopupBtnClickHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
+  }
+
+  // setAddToWatchListClickHandler(handler) {
+  //   this.getElement().querySelector(`.film-details__control-label--watchlist`)
+  //     .addEventListener(`click`, handler)
+  // }
+
+  // setMarkAsWatchedClickHandler(handler) {
+  //   this.getElement().querySelector(`.film-details__control-label--watched`)
+  //     .addEventListener(`click`, handler)
+  // }
+
+  // setFavoriteClickHandler(handler) {
+  //   this.getElement().querySelector(`.film-details__control-label--favorite`)
+  //     .addEventListener(`click`, handler);
+
+  //     this.rerender()
+  // }
+
+  rerender() {
+    super.rerender();
+  }
+
+  recoveryListeners() {
   }
 }

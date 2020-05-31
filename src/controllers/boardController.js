@@ -12,10 +12,10 @@ const SHOWING_ON_START = 5;
 const SHOWIN_BY_BTN = 2;
 
 
-const renderFilms = (container, movies) => {
+const renderFilms = (container, movies, onDataChange) => {
   return movies.map((movie) => {
-    const filmController = new FilmController(container, movie);
-    filmController.render();
+    const filmController = new FilmController(container, onDataChange);
+    filmController.render(movie);
     return filmController;
   });
 };
@@ -54,6 +54,7 @@ export default class Board {
     this._mostCommentedComponent = new MostCommentedComponent();
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
+    this._onDataChange = this._onDataChange.bind(this);
   }
 
   _renderLoadMore(filmListContainer) {
@@ -70,7 +71,7 @@ export default class Board {
 
       const sortedMovies = getSortedMovies(this._movies, this._sortComponent.getSortType(), prevMoviesCount, this._showingMoviesCount);
 
-      renderFilms(filmListContainer, sortedMovies);
+      renderFilms(filmListContainer, sortedMovies, this._onDataChange);
 
       if (this._showingMoviesCount >= this._movies.length) {
         remove(this._loadMoreComponent);
@@ -98,12 +99,12 @@ export default class Board {
       return;
     }
 
-    renderFilms(filmListContainer, this._movies.slice(0, this._showingMoviesCount));
+    renderFilms(filmListContainer, this._movies.slice(0, this._showingMoviesCount), this._onDataChange);
 
     this._renderLoadMore(filmListContainer);
 
-    renderFilms(topRatedElement, this._movies.slice(0, 2));
-    renderFilms(mostCommentedElement, this._movies.slice(2, 4));
+    renderFilms(topRatedElement, this._movies.slice(0, 2), this._onDataChange);
+    renderFilms(mostCommentedElement, this._movies.slice(2, 4), this._onDataChange);
   }
 
   _onSortTypeChange(sortType) {
@@ -114,8 +115,21 @@ export default class Board {
     const filmListContainer = this._container.querySelector(`.films-list__container`);
     filmListContainer.innerHTML = ``;
 
-    renderFilms(filmListContainer, sortedMovies);
+    renderFilms(filmListContainer, sortedMovies, this._onDataChange);
 
     this._renderLoadMore(filmListContainer);
+  }
+
+  _onDataChange(filmController, oldData, newData) {
+    const index = this._movies.findIndex((it) => it === oldData);
+
+    if (index === -1) {
+      return;
+    }
+
+    this._movies = [].concat(this._movies.slice(0, index), newData, this._movies.slice(index + 1));
+
+    filmController.render(this._movies[index]);
+
   }
 }

@@ -14,6 +14,7 @@ export default class Film {
   render() {
     this._movieEditComponent = new MovieEdit(this._movie);
     this._movieComponent = new Movie(this._movie);
+
     render(this._container, this._movieComponent, RenderPosition.AFTERBEGIN);
 
     this._movieComponent.setPosterBtnClickHandler(() => {

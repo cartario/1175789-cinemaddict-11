@@ -93,7 +93,7 @@ export const createMovieEditTemplate = (movie) => {
             </div>
           </div>
         </section>
-      </div>`
+      </div>`;
   };
 
   const createCommentMarkup = getCommentMarkup();

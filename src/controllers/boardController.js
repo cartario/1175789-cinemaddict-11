@@ -130,8 +130,23 @@ export default class Board {
     this._renderLoadMore(filmListContainer);
   }
 
+  _removeMovies() {
+    console.log(this._showedFilmControllers);
+    this._showedFilmControllers.forEach((it) => it.destroy());
+    this._showedFilmControllers = [];
+  }
+
+  _renderMovies(movies) {
+    const filmListContainer = this._container.querySelector(`.films-list__container`);
+    const newFilms = renderFilms(filmListContainer, movies, this._onDataChange, this._onViewChange);
+    this._showedFilmControllers = newFilms;
+  }
+
   _updateMovies() {
-    // TODO реализовать перерисовку
+    const filmListContainer = this._container.querySelector(`.films-list__container`);
+    this._removeMovies();
+    this._renderMovies(this._moviesModel.getMovies());
+    this._renderLoadMore(filmListContainer);
   }
 
   _onDataChange(filmController, oldData, newData) {

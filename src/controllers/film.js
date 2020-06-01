@@ -1,6 +1,6 @@
 import Movie from "../components/movie.js";
 import MovieEdit from "../components/movieEdit.js";
-import {render, replace, RenderPosition} from "../utils/render.js";
+import {render, replace, remove, RenderPosition} from "../utils/render.js";
 
 const Mode = {
   DEFAULT: `default`,
@@ -89,5 +89,11 @@ export default class Film {
       this._replaceEditToMovie();
     }
 
+  }
+
+  destroy() {
+    remove(this._movieEditComponent);
+    remove(this._movieComponent);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 }

@@ -1,5 +1,8 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {generateComment, generateComments} from "../utils/const.js";
+import {formatTime} from "../utils/common.js";
+
+console.log(formatTime(new Date()))
 
 export const createMovieEditTemplate = (movie, options = {}) => {
   const {comments, film_info, id, user_details} = movie; // TODO нужен адаптер (модель movie);
@@ -235,8 +238,6 @@ export default class MovieEdit extends AbstractSmartComponent {
 
       this.rerender();
         })
-
-
     })
 
   }
@@ -247,5 +248,14 @@ export default class MovieEdit extends AbstractSmartComponent {
 
   recoveryListeners() {
     this._subscribeOnEvents();
+  }
+
+  reset() {
+    const movie = this._movie;
+    this._isWatchlist = movie.user_details.watchlist;
+    this._isAlreadyWatched = movie.user_details.already_watched;
+    this._isFavorite = movie.user_details.favorite;
+
+    this.rerender();
   }
 }

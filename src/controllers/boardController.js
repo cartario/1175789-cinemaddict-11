@@ -83,6 +83,10 @@ export default class Board {
   }
 
   render() {
+    // this._moviesModel.setDataChangeHandler(() => {
+    //   console.log(`data changed`)
+    // })
+
     render(this._container, this._filtersComponent, RenderPosition.BEFOREEND);
     render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
     render(this._container, this._filmsBoxComponent, RenderPosition.BEFOREEND);
@@ -97,6 +101,7 @@ export default class Board {
     const mostCommentedElement = this._mostCommentedComponent.getElement().querySelector(`.films-list__container`);
 
     this._movies = this._moviesModel.getMovies();
+
     if (!this._movies) {
       render(filmListContainer, this._noMoviesComponent, RenderPosition.BEFOREEND);
       return;
@@ -124,16 +129,12 @@ export default class Board {
   }
 
   _onDataChange(filmController, oldData, newData) {
-    const index = this._movies.findIndex((it) => it === oldData);
+    // debugger;
+    const Success = this._moviesModel.updateMovie(oldData.id, newData);
 
-    if (index === -1) {
-      return;
+    if (Success) {
+      filmController.render(newData);
     }
-
-    this._movies = [].concat(this._movies.slice(0, index), newData, this._movies.slice(index + 1));
-
-    filmController.render(this._movies[index]);
-
   }
 
   _onViewChange() {

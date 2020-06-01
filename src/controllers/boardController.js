@@ -2,7 +2,7 @@ import FilmController from "./film.js";
 import {render, remove, RenderPosition} from "../utils/render.js";
 import LoadMoreComponent from "../components/showMoreBtn.js";
 import NoMoviesComponent from "../components/no-movies.js";
-import FiltersComponent from "../components/mainNavigation.js";
+
 import SortComponent, {SortType} from "../components/sort.js";
 import FilmsBoxComponent from "../components/filmsBox.js";
 import TopRatedComponent from "../components/topRated.js";
@@ -47,15 +47,18 @@ export default class Board {
     this._loadMoreComponent = new LoadMoreComponent();
     this._showingMoviesCount = SHOWING_ON_START;
     this._noMoviesComponent = new NoMoviesComponent();
-    this._filtersComponent = new FiltersComponent();
+
     this._sortComponent = new SortComponent();
     this._filmsBoxComponent = new FilmsBoxComponent();
     this._topRatedComponent = new TopRatedComponent();
     this._mostCommentedComponent = new MostCommentedComponent();
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
+    this._onDataChange = this._onDataChange.bind(this);
+    this._onFilterChange = this._onFilterChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
-    this._onDataChange = this._onDataChange.bind(this);
+    this._moviesModel.setFilterChangeHandler(this._onFilterChange);
+
     this._showedFilmControllers = [];
   }
 
@@ -87,7 +90,6 @@ export default class Board {
     //   console.log(`data changed`)
     // })
 
-    render(this._container, this._filtersComponent, RenderPosition.BEFOREEND);
     render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
     render(this._container, this._filmsBoxComponent, RenderPosition.BEFOREEND);
 
@@ -100,7 +102,7 @@ export default class Board {
     const topRatedElement = this._topRatedComponent.getElement().querySelector(`.films-list__container`);
     const mostCommentedElement = this._mostCommentedComponent.getElement().querySelector(`.films-list__container`);
 
-    this._movies = this._moviesModel.getMovies();
+    this._movies = this._moviesModel.getAllMovies();
 
     if (!this._movies) {
       render(filmListContainer, this._noMoviesComponent, RenderPosition.BEFOREEND);
@@ -128,6 +130,10 @@ export default class Board {
     this._renderLoadMore(filmListContainer);
   }
 
+  _updateMovies() {
+    // TODO реализовать перерисовку
+  }
+
   _onDataChange(filmController, oldData, newData) {
     // debugger;
     const Success = this._moviesModel.updateMovie(oldData.id, newData);
@@ -139,5 +145,9 @@ export default class Board {
 
   _onViewChange() {
     this._showedFilmControllers.forEach((it) => it.setDefaultView())
+  }
+
+  _onFilterChange() {
+    this._updateMovies();
   }
 }

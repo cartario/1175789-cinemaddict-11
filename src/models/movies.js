@@ -1,12 +1,22 @@
+import {FilterType} from "../utils/const.js";
+import {getMoviesByFilter} from "../utils/common.js";
+
 export default class MoviesModel {
   constructor() {
     this._movies = [];
+    this._activeFilterType = FilterType.ALL;
     // слушатели
     this._dataChangeHandlers = [];
+    this._filterChangeHandlers = [];
+  }
+
+  getAllMovies() {
+    return this._movies;
   }
 
   getMovies() {
-    return this._movies;
+
+    return getMoviesByFilter(this._movies, this._activeFilterType);
   }
 
   setMovies(movies) {
@@ -19,6 +29,10 @@ export default class MoviesModel {
 // метод подписки
   setDataChangeHandler(handler) {
     this._dataChangeHandlers.push(handler);
+  }
+
+  setFilterChangeHandler(handler) {
+    this._filterChangeHandlers.push(handler);
   }
 
   _callHandlers(handlers) {
@@ -37,5 +51,11 @@ export default class MoviesModel {
     this._callHandlers(this._dataChangeHandlers);
 
     return true;
+  }
+
+  setFilterType(filterType) {
+    this.getMovies();
+    this._activeFilterType = filterType;
+    this._callHandlers(this._filterChangeHandlers);
   }
 }

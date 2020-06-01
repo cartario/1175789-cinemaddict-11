@@ -1,5 +1,6 @@
 import API from "./api.js";
 import MoviesModel from "./models/movies.js";
+import FilterController from "./controllers/filter.js";
 import BoardController from "./controllers/boardController.js";
 import Header from "./components/HeaderProfile.js";
 import {render, RenderPosition} from "./utils/render.js";
@@ -11,6 +12,8 @@ const moviesModel = new MoviesModel();
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 // const footerElement = document.querySelector(`.footer`);
+
+
 
 const boardController = new BoardController(mainElement, moviesModel, api);
 
@@ -28,3 +31,6 @@ api.getMovies()
 
 const headerComponent = new Header();
 render(headerElement, headerComponent, RenderPosition.BEFOREEND);
+
+const filterController = new FilterController(mainElement, moviesModel);
+filterController.render();

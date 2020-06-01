@@ -1,3 +1,10 @@
+export const FilterType = {
+  ALL: `All movies`,
+  WATCHLIST: `Watchlist`,
+  HISTORY: `History`,
+  FAVORITES: `Favorites`,
+};
+
 const getRandomInt = (min, max) => {
   return min + Math.floor(Math.random() * (max - min));
 };

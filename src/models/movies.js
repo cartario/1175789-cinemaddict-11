@@ -3,6 +3,7 @@ import {getMoviesByFilter} from "../utils/common.js";
 
 export default class MoviesModel {
   constructor() {
+
     this._movies = [];
     this._activeFilterType = FilterType.ALL;
     // слушатели
@@ -22,11 +23,11 @@ export default class MoviesModel {
   setMovies(movies) {
     this._movies = Array.from(movies);
 
-    //уведомление
+    // уведомление
     this._callHandlers(this._dataChangeHandlers);
   }
 
-// метод подписки
+  // метод подписки
   setDataChangeHandler(handler) {
     this._dataChangeHandlers.push(handler);
   }
@@ -51,6 +52,24 @@ export default class MoviesModel {
     this._callHandlers(this._dataChangeHandlers);
 
     return true;
+  }
+
+  removeMovie(id) {
+    const index = this._movies.findIndex((it) => it.id === id);
+
+    if (index === -1) {
+      return false;
+    }
+
+    this._movies = [].concat(this._movies.slice(0, index), this._movies.slice(index + 1));
+    this._callHandlers(this._dataChangeHandlers);
+
+    return true;
+  }
+
+  addMovie(movie) {
+    this._movies = [].concat(movie, this._movies);
+    this._callHandlers(this._dataChangeHandlers);
   }
 
   setFilterType(filterType) {

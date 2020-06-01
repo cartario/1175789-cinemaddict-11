@@ -1,12 +1,10 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
-import {generateComment, generateComments} from "../utils/const.js";
-import {formatTime} from "../utils/common.js";
-
-console.log(formatTime(new Date()))
+import {generateComments} from "../utils/const.js";
+// import {formatTime} from "../utils/common.js";
 
 export const createMovieEditTemplate = (movie, options = {}) => {
-  const {comments, film_info, id, user_details} = movie; // TODO нужен адаптер (модель movie);
-  const filmInfo = film_info;
+  const {comments, filmInfo} = movie; // TODO нужен адаптер (модель movie);
+
   const {isFavorite, isWatchlist, isAlreadyWatched, emoji} = options;
 
 
@@ -35,11 +33,11 @@ export const createMovieEditTemplate = (movie, options = {}) => {
   // id: "0"
 
   // структура комментария (поиск по id фильма)
-    // author: "Fedor Walker"
-    // comment: "."
-    // date: "2020-05-15T11:23:49.929Z"
-    // emotion: "sleeping"
-    // id: "117351"
+  // author: "Fedor Walker"
+  // comment: "."
+  // date: "2020-05-15T11:23:49.929Z"
+  // emotion: "sleeping"
+  // id: "117351"
 
   const getCommentMarkup = () => {
     const commentsFilm = generateComments(comments.length);
@@ -114,18 +112,18 @@ export const createMovieEditTemplate = (movie, options = {}) => {
           <div class="film-details__poster">
             <img class="film-details__poster-img" src="./${filmInfo.poster}" alt="">
 
-            <p class="film-details__age">${filmInfo.age_rating}+</p>
+            <p class="film-details__age">${filmInfo.ageRating}+</p>
           </div>
 
           <div class="film-details__info">
             <div class="film-details__info-head">
               <div class="film-details__title-wrap">
                 <h3 class="film-details__title">${filmInfo.title}</h3>
-                <p class="film-details__title-original">Original: ${filmInfo.alternative_title}</p>
+                <p class="film-details__title-original">Original: ${filmInfo.alternativeTitle}</p>
               </div>
 
               <div class="film-details__rating">
-                <p class="film-details__total-rating">${filmInfo.total_rating}</p>
+                <p class="film-details__total-rating">${filmInfo.totalRating}</p>
               </div>
             </div>
 
@@ -144,7 +142,7 @@ export const createMovieEditTemplate = (movie, options = {}) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${filmInfo.release.date}</td>
+                <td class="film-details__cell">${filmInfo.release.releaseDate}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
@@ -152,7 +150,7 @@ export const createMovieEditTemplate = (movie, options = {}) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>
-                <td class="film-details__cell">${filmInfo.release.release_country}</td>
+                <td class="film-details__cell">${filmInfo.release.releaseCountry}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Genres</td>
@@ -191,9 +189,9 @@ export default class MovieEdit extends AbstractSmartComponent {
     super();
     this._movie = movie;
     this._emoji = null;
-    this._isWatchlist = this._movie.user_details.watchlist;
-    this._isAlreadyWatched = this._movie.user_details.already_watched;
-    this._isFavorite = this._movie.user_details.favorite;
+    this._isWatchlist = this._movie.userDetails.watchlist;
+    this._isAlreadyWatched = this._movie.userDetails.alreadyWatched;
+    this._isFavorite = this._movie.userDetails.favorite;
     this._subscribeOnEvents();
   }
 
@@ -212,33 +210,33 @@ export default class MovieEdit extends AbstractSmartComponent {
   }
 
   _subscribeOnEvents() {
-      const element = this.getElement();
+    const element = this.getElement();
 
     element.querySelector(`.film-details__control-label--favorite`)
       .addEventListener(`click`, () => {
         this._isFavorite = !this._isFavorite;
-    this.rerender();
+        this.rerender();
       });
 
     element.querySelector(`.film-details__control-label--watched`)
     .addEventListener(`click`, () => {
       this._isAlreadyWatched = !this._isAlreadyWatched;
-    this.rerender();
+      this.rerender();
     });
 
     element.querySelector(`.film-details__control-label--watchlist`)
     .addEventListener(`click`, () => {
       this._isWatchlist = !this._isWatchlist;
-    this.rerender();
+      this.rerender();
     });
 
     Array.from(element.querySelectorAll(`.film-details__emoji-item`)).forEach((emoji) => {
       emoji.addEventListener(`click`, (evt) => {
-      this._emoji = evt.target.value;
+        this._emoji = evt.target.value;
 
-      this.rerender();
-        })
-    })
+        this.rerender();
+      });
+    });
 
   }
 
@@ -252,9 +250,9 @@ export default class MovieEdit extends AbstractSmartComponent {
 
   reset() {
     const movie = this._movie;
-    this._isWatchlist = movie.user_details.watchlist;
-    this._isAlreadyWatched = movie.user_details.already_watched;
-    this._isFavorite = movie.user_details.favorite;
+    this._isWatchlist = movie.userDetails.watchlist;
+    this._isAlreadyWatched = movie.userDetails.alreadyWatched;
+    this._isFavorite = movie.userDetails.favorite;
 
     this.rerender();
   }

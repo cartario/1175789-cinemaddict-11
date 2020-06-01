@@ -13,12 +13,11 @@ const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 // const footerElement = document.querySelector(`.footer`);
 
-
-
 const boardController = new BoardController(mainElement, moviesModel, api);
 
 api.getMovies()
   .then((movies) => {
+
     moviesModel.setMovies(movies);
     boardController.render();
     return movies;

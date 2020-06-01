@@ -17,16 +17,18 @@ export const getMoviesByFilter = (movies, filterType) => {
     case FilterType.FAVORITES:
       return getFavoriteMovies(movies);
   }
+
+  return true;
 };
 
 const getWatchlistMovies = (movies) => {
-  return movies.filter((movie) => movie.user_details.watchlist);
+  return movies.filter((movie) => movie.userDetails.watchlist);
 };
 
 const getHistoryMovies = (movies) => {
-  return movies.filter((movie) => movie.user_details.already_watched);
+  return movies.filter((movie) => movie.userDetails.alreadyWatched);
 };
 
 const getFavoriteMovies = (movies) => {
-  return movies.filter((movie) => movie.user_details.favorite);
+  return movies.filter((movie) => movie.userDetails.favorite);
 };

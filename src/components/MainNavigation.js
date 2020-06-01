@@ -1,9 +1,9 @@
 import AbstractComponent from "./abstract-component.js";
 
-  const createFilterMarkup = (filter) => {
-    const {name, count, checked} = filter;
-    return `<a href="#${name}" class="main-navigation__item ${checked ? `main-navigation__item--active` : ``}" data-filter-type="${name}">${name}<span class="main-navigation__item-count ">${count}</span></a>`
-  }
+const createFilterMarkup = (filter) => {
+  const {name, count, checked} = filter;
+  return `<a href="#${name}" class="main-navigation__item ${checked ? `main-navigation__item--active` : ``}" data-filter-type="${name}">${name}<span class="main-navigation__item-count ">${count}</span></a>`;
+};
 
 export const createMainNavigation = (filters) => {
 
@@ -40,6 +40,6 @@ export default class Filters extends AbstractComponent {
 
       const filterType = evt.target.dataset.filterType;
       handler(filterType);
-    })
+    });
   }
 }

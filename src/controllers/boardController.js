@@ -1,4 +1,4 @@
-import FilmController from "./film.js";
+import FilmController, {EmptyMovie} from "./film.js";
 import {render, remove, RenderPosition} from "../utils/render.js";
 import LoadMoreComponent from "../components/showMoreBtn.js";
 import NoMoviesComponent from "../components/no-movies.js";
@@ -32,7 +32,7 @@ const getSortedMovies = (moviesList, sortType, from, to) => {
       sortedMovies = showingMovies.sort((a, b) => Number(a.id) - Number(b.id));
       break;
     case SortType.RATING:
-      sortedMovies = showingMovies.sort((a, b) => a.film_info.total_rating - b.film_info.total_rating);
+      sortedMovies = showingMovies.sort((a, b) => a.filmInfo.total_rating - b.filmInfo.total_rating);
       break;
   }
   return sortedMovies.slice(from, to);
@@ -47,6 +47,7 @@ export default class Board {
     this._loadMoreComponent = new LoadMoreComponent();
     this._showingMoviesCount = SHOWING_ON_START;
     this._noMoviesComponent = new NoMoviesComponent();
+    this._creatingMovie = null;
 
     this._sortComponent = new SortComponent();
     this._filmsBoxComponent = new FilmsBoxComponent();
@@ -131,7 +132,7 @@ export default class Board {
   }
 
   _removeMovies() {
-    console.log(this._showedFilmControllers);
+
     this._showedFilmControllers.forEach((it) => it.destroy());
     this._showedFilmControllers = [];
   }
@@ -150,16 +151,33 @@ export default class Board {
   }
 
   _onDataChange(filmController, oldData, newData) {
-    // debugger;
-    const Success = this._moviesModel.updateMovie(oldData.id, newData);
 
-    if (Success) {
-      filmController.render(newData);
+    // добавление
+    if (oldData === EmptyMovie) {
+      this._creatingMovie = null;
+      if (newData === null) {
+        filmController.destroy();
+      } else {
+        this._moviesModel.addMovie(newData);
+        filmController.render(newData);
+      }
+    } else if (newData === null) {
+      this._moviesModel.removeMovie(oldData.id);
+
+
+    } else {
+    // обновление
+      const Success = this._moviesModel.updateMovie(oldData.id, newData);
+
+      if (Success) {
+        filmController.render(newData);
+      }
     }
+
   }
 
   _onViewChange() {
-    this._showedFilmControllers.forEach((it) => it.setDefaultView())
+    this._showedFilmControllers.forEach((it) => it.setDefaultView());
   }
 
   _onFilterChange() {

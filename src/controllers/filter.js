@@ -12,7 +12,7 @@ export default class Filter {
     this._onFilterChange = this._onFilterChange.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
 
-//пдписывается на метод модели
+    // пдписывается на метод модели
     this._moviesModel.setDataChangeHandler(this._onDataChange);
   }
 
@@ -25,13 +25,13 @@ export default class Filter {
         name: filterType,
         count: getMoviesByFilter(allMovies, filterType).length,
         checked: filterType === this._activeFilterType,
-      }
+      };
     });
     const oldComponent = this._filterComponent;
     this._filterComponent = new FiltersComponent(filters);
     this._filterComponent.setFilterChangeHandler(this._onFilterChange);
 
-     if (oldComponent) {
+    if (oldComponent) {
       replace(this._filterComponent, oldComponent);
     } else {
       render(this._container, this._filterComponent, RenderPosition.BEFOREEND);

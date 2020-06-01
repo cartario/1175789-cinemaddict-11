@@ -2,9 +2,14 @@ import Movie from "../components/movie.js";
 import MovieEdit from "../components/movieEdit.js";
 import {render, replace, remove, RenderPosition} from "../utils/render.js";
 
-const Mode = {
+export const Mode = {
   DEFAULT: `default`,
   EDIT: `edit`,
+  ADDING: `adding`,
+};
+
+export const EmptyMovie = {
+
 };
 
 export default class Film {
@@ -44,21 +49,21 @@ export default class Film {
 
     this._movieComponent.setAddToWatchListClickHandler(() => {
       this._onDataChange(this, movie, Object.assign({}, movie, {
-        user_details: Object.assign({}, movie.user_details, {watchlist: !movie.user_details.watchlist}),
-      }))
-    })
+        userDetails: Object.assign({}, movie.userDetails, {watchlist: !movie.userDetails.watchlist}),
+      }));
+    });
 
     this._movieComponent.setMarkAsWatchedClickHandler(() => {
       this._onDataChange(this, movie, Object.assign({}, movie, {
-        user_details: Object.assign({}, movie.user_details, {already_watched: !movie.user_details.already_watched}),
-      }))
-    })
+        userDetails: Object.assign({}, movie.userDetails, {alreadyWatched: !movie.userDetails.alreadyWatched}),
+      }));
+    });
 
     this._movieComponent.setFavoriteClickHandler(() => {
       this._onDataChange(this, movie, Object.assign({}, movie, {
-        user_details: Object.assign({}, movie.user_details, {favorite: !movie.user_details.favorite}),
-      }))
-    })
+        userDetails: Object.assign({}, movie.userDetails, {favorite: !movie.userDetails.favorite}),
+      }));
+    });
   }
 
   _onEscKeyDown(evt) {

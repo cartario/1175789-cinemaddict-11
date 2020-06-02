@@ -11,7 +11,6 @@ const moviesModel = new MoviesModel();
 // ключевые узлы
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
-// const footerElement = document.querySelector(`.footer`);
 
 const boardController = new BoardController(mainElement, moviesModel, api);
 
@@ -22,11 +21,6 @@ api.getMovies()
     boardController.render();
     return movies;
   });
-
-// api.getComments()
-//   .then((comments) => {
-//     // console.log(comments)
-//   });
 
 const headerComponent = new Header();
 render(headerElement, headerComponent, RenderPosition.BEFOREEND);

@@ -33,28 +33,3 @@ export default class Movie {
     return data.map(Movie.parseMovie);
   }
 }
-
-
-// filmInfo Структура:
-// actors: (6) ["Takeshi Kitano", "Christian Bale", "Gary Oldman", "Harrison Ford", "Cillian Murphy", "Ralph Fiennes"]
-// age_rating: 6
-// alternative_title: "A Shark Who Saw Himself"
-// description: "true masterpiece where love and death are closer to heroes than their family."
-// director: "Clint Eastwood"
-// genre: []
-// poster: "images/posters/the-great-flamarion.jpg"
-// release: {date: "2004-04-15T02:19:53.175Z", release_country: "USA"}
-// runtime: 162
-// title: "A Tale Of A Little Bird Who Sold Themselves"
-// total_rating: 4
-// writers: (3) ["Robert Zemeckis", "Robert Rodrigues", "Hayao Miazaki"]
-
-// user_details Структура:
-// already_watched: true
-// favorite: false
-// watching_date: "2020-02-24T13:34:21.386Z"
-// watchlist: false
-
-// comments: []
-
-// id: "0"

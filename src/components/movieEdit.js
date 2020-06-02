@@ -1,44 +1,10 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {generateComments} from "../utils/const.js";
-// import {formatTime} from "../utils/common.js";
 
 export const createMovieEditTemplate = (movie, options = {}) => {
-  const {comments, filmInfo} = movie; // TODO нужен адаптер (модель movie);
+  const {comments, filmInfo} = movie;
 
   const {isFavorite, isWatchlist, isAlreadyWatched, emoji} = options;
-
-
-  // filmInfo Структура:
-  // actors: (6) ["Takeshi Kitano", "Christian Bale", "Gary Oldman", "Harrison Ford", "Cillian Murphy", "Ralph Fiennes"]
-  // age_rating: 6
-  // alternative_title: "A Shark Who Saw Himself"
-  // description: "true masterpiece where love and death are closer to heroes than their family."
-  // director: "Clint Eastwood"
-  // genre: []
-  // poster: "images/posters/the-great-flamarion.jpg"
-  // release: {date: "2004-04-15T02:19:53.175Z", release_country: "USA"}
-  // runtime: 162
-  // title: "A Tale Of A Little Bird Who Sold Themselves"
-  // total_rating: 4
-  // writers: (3) ["Robert Zemeckis", "Robert Rodrigues", "Hayao Miazaki"]
-
-  // user_details Структура:
-  // already_watched: true
-  // favorite: false
-  // watching_date: "2020-02-24T13:34:21.386Z"
-  // watchlist: false
-
-  // comments: []
-
-  // id: "0"
-
-  // структура комментария (поиск по id фильма)
-  // author: "Fedor Walker"
-  // comment: "."
-  // date: "2020-05-15T11:23:49.929Z"
-  // emotion: "sleeping"
-  // id: "117351"
-
   const getCommentMarkup = () => {
     const commentsFilm = generateComments(comments.length);
 

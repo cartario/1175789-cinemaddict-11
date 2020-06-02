@@ -87,10 +87,6 @@ export default class Board {
   }
 
   render() {
-    // this._moviesModel.setDataChangeHandler(() => {
-    //   console.log(`data changed`)
-    // })
-
     render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
     render(this._container, this._filmsBoxComponent, RenderPosition.BEFOREEND);
 
